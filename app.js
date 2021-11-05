@@ -1,60 +1,33 @@
+const form = document.querySelector('form')
+form.addEventListener('submit', (event) => { // escuta quando alguém clicar no botão submit. Depois tem uma função que pega o evento
+event.preventDefault() // quando a página é recarregada o evento pegado some, então usamos essa função para que ele apareça
 
+const inputTodo = document.querySelector('#inputTodo')
+const valueTodo = inputTodo.value;
 
-/* Criando o item como se fosse uma div no html, no caso fazemos o mesmo mais no js*/ 
-const criarItem = (tarefa, status) => { /* texto de cada tarefa - status se feita ou não */
-    const item = document.createElement('label')
-    item.classList.add('todo__item')
-    item.innerHTML = `
-    <input type="checkbox" ${status}>
-    <div>${tarefa}</div> 
-    <input type="button" value="X">
-    `
-    document.getElementById('todoList').appendChild(item) /*add o item criado*/
+if (valueTodo) {
+    createLi(valueTodo)
+}else{
+    alert('Insira uma tarefa!')
+}
+})
+
+function createLi(text) {
+    const li = document.createElement('li')
+    const button = document.createElement('button')
+    const div = document.createElement('div')
+
+    button.textContent = 'Apagar tarefa' // texto do botão
+    div.textContent = text;
+    button.onclick = () => deleteLi(li);
+
+    //aparecer tarefa, pois em cima ela cria mais não parece na minha página
+    const ul = document.querySelector('ul')
+    ul.appendChild(li); // essa função faz aparecer
+    li.appendChild(div)
+    li.appendChild(button)
 }
 
-/*Criando JSON para simular um banco de dados*/
-
-let banco = [
-    {'tarefa': 'Estudar', 'status':''},
-    {'tarefa':'Comer', 'status': 'checked'},
-    {'tarefa':'teste', 'status': 'checked'}
-
-]
-
-/* Le o banco de dados e cria os elementos deles quando mudar os elemtos do banco ele atualiza a tela - Atulizar */
-
-const limparTarefas = () =>{
-    const todoList = document.getElementById('todoList')
-    while (todoList.firstChild) {
-        todoList.removeChild(todoList.lastChild)
-    }
+function deleteLi(li) {
+    li.remove()
 }
-
-const atulizarTela = () =>{
-    limparTarefas()
-    banco.forEach(item => criarItem(item.tarefa, item.status)); /*forEach - método do array para percorrer todo o array do banco de dados*/
-}
-
-
-/* função inserir nova tarefa */
-const addItem = (event) => {
-    const tecla = event.key;
-    const texto = event.target.value /*pega a tarefa digitada*/
-    if (tecla==='Enter') {
-        banco.push({'tarefa': texto , 'status': ''})
-        atulizarTela()
-        event.target.value = '' /*limpa a caixa onde são escritas as tarefas*/
-    }
-}
-document.getElementById('newItem').addEventListener('keypress', addItem)
-
-
-/*quando clicar no checked marcar no banco*/
-
-const clikItem = (evento) =>{
-    const elemnto = evento.target;
-}
-document.getElementById('todoList').addEventListener('click', clikItem)
-
-
-atulizarTela()
